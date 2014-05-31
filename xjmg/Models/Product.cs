@@ -31,7 +31,7 @@ namespace xjmg.Models
 
         [DisplayName("商品颜色")]
         [Required(ErrorMessage = "请输入商品颜色")]
-        public Color Name { get; set; }
+        public Color Color { get; set; }
 
         [DisplayName("商品价格")]
         [Required(ErrorMessage = "请输入商品售价")]
