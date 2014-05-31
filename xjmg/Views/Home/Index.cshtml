@@ -1,0 +1,17 @@
+﻿@model List<xjmg.Models.ProductCategory>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>@Html.DisplayNameFor(model=>model[0])</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<ul>
+    @foreach (var item in Model) {
+    <li>@Html.ActionLink(item.Name,"ProductList",new {id=item.Id})</li>
+}
+</ul>
+
