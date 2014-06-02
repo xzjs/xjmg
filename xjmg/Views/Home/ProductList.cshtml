@@ -1,4 +1,7 @@
-﻿@model IEnumerable<xjmg.Models.Product>
+﻿@using PagedList
+@using PagedList.Mvc
+
+@model IEnumerable<xjmg.Models.Product>
 
 @{
     var ajaxOption = new AjaxOptions()
@@ -8,6 +11,12 @@
         HttpMethod = "Post"
     };
 }
+
+@{
+    var data = Model as IPagedList<xjmg.Models.Product>;
+}
+
+
 
 @section scripts
 {
@@ -22,7 +31,7 @@
     </script>
 }
 
-<h2>@Html.DisplayNameFor(model=>model.ToList()[0])</h2>
+<h2>@Html.DisplayNameFor(model => model.ToList()[0])</h2>
 
 <h3>您正在浏览【@Model.First().ProductCategory.Name】分类的商品：</h3>
 
@@ -43,24 +52,27 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PublishOn)
-        </td>
-        <td>
-            @Ajax.ActionLink("添加购物车", "AddToCart","Cart", new { ProductId=item.Id },ajaxOption) |
-        </td>
-    </tr>
-}
-
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublishOn)
+            </td>
+            <td>
+                @Ajax.ActionLink("添加购物车", "AddToCart", "Cart", new { ProductId = item.Id }, ajaxOption) |
+            </td>
+        </tr>
+    }
 </table>
+<p>
+    @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("ProductList", new { p = Page }))
+</p>

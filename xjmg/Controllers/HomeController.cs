@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using xjmg.Models;
+using PagedList;
 
 namespace xjmg.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         //
         // GET: /Home/
@@ -16,71 +18,79 @@ namespace xjmg.Controllers
         //首页
         public ActionResult Index()
         {
-            var data = new List<ProductCategory>()
+            var data = db.ProductCategories.ToList();
+#if DEBUG
+            //插入演示信息
+            if (data.Count == 0)
             {
-                new ProductCategory(){Id=1,Name="文具"},
-                new ProductCategory(){Id=2,Name="礼品"},
-                new ProductCategory(){Id=3,Name="书籍"},
-                new ProductCategory(){Id=4,Name="美劳用品"}
-            };
+                db.ProductCategories.Add(new ProductCategory() { Id = 1, Name = "文具" });
+                db.ProductCategories.Add(new ProductCategory() { Id = 2, Name = "礼品" });
+                db.ProductCategories.Add(new ProductCategory() { Id = 3, Name = "书籍" });
+                db.ProductCategories.Add(new ProductCategory() { Id = 4, Name = "美劳用具" });
+
+                db.SaveChanges();
+
+                data = db.ProductCategories.ToList();
+            }
+#endif
             return View(data);
         }
 
         //商品列表
-        public ActionResult ProductList(int id)
+        public ActionResult ProductList(int id, int p = 1)
         {
-            var productCategory = new ProductCategory()
+            try
             {
-                Id = id,
-                Name = "类别" + id
-            };
+                var productCategory = db.ProductCategories.Find(id);
 
-            var data = new List<Product>()
-            {
-                new Product()
+                if (productCategory != null)
                 {
-                    Id=1,
-                    ProductCategory=productCategory,
-                    Name="原子笔",
-                    Description="N/A",
-                    Price=30,
-                    PublishOn=DateTime.Now,
-                    Color=Color.Black
-                },
-                new Product
-                {
-                    Id=1,
-                    ProductCategory=productCategory,
-                    Name="铅笔",
-                    Description="N/A",
-                    Price=5,
-                    PublishOn=DateTime.Now,
-                    Color=Color.Black
+                    var data = productCategory.Products.ToList();
+
+#if DEBUG
+                    //插入演示信息
+                    if (data.Count == 0)
+                    {
+                        productCategory.Products.Add(new Product()
+                        {
+                            Name = productCategory.Name + "类别下的商品1",
+                            Description = "N/A",
+                            Price = 10,
+                            PublishOn = DateTime.Now,
+                            ProductCategory = productCategory
+                        });
+                        productCategory.Products.Add(new Product()
+                        {
+                            Name = productCategory.Name + "类别下的商品2",
+                            Description = "N/A",
+                            Price = 12,
+                            PublishOn = DateTime.Now,
+                            ProductCategory = productCategory
+                        });
+                        db.SaveChanges();
+
+                        data = productCategory.Products.ToList();
+                    }
+#endif
+                    var pageData = data.ToPagedList(pageNumber: p, pageSize: 10);
+                    return View(pageData);
                 }
-            };
-            return View(data);
+                else
+                {
+                    return HttpNotFound();
+                }
+            }
+            catch (DbEntityValidationException ex)
+            {
+                return HttpNotFound();
+            }
+
         }
 
         //商品明细
         public ActionResult ProductDatail(int id)
         {
-            var productCategory = new ProductCategory()
-            {
-                Id = 1,
-                Name = "文具"
-            };
-
-            var data = new Product()
-            {
-                Id = id,
-                ProductCategory = productCategory,
-                Name = "商品" + id,
-                Description = "N/A",
-                Price = 30,
-                PublishOn = DateTime.Now,
-                Color = Color.Black
-            };
-
+            var data = db.Products.Find(id);
             return View(data);
         }
     }

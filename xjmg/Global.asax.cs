@@ -16,6 +16,9 @@ namespace xjmg
     {
         protected void Application_Start()
         {
+            //数据库自动迁移
+            System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<xjmg.Models.xjmgContext>());
+
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);

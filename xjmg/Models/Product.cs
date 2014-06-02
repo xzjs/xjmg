@@ -17,7 +17,7 @@ namespace xjmg.Models
 
         [DisplayName("商品类别")]
         [Required]
-        public ProductCategory ProductCategory { get; set; }
+        public virtual ProductCategory ProductCategory { get; set; }
 
         [DisplayName("商品名称")]
         [Required(ErrorMessage = "请输入商品名称")]
@@ -29,13 +29,9 @@ namespace xjmg.Models
         [MaxLength(250, ErrorMessage = "商品名称不可超过250字")]
         public string Description { get; set; }
 
-        [DisplayName("商品颜色")]
-        [Required(ErrorMessage = "请输入商品颜色")]
-        public Color Color { get; set; }
-
         [DisplayName("商品价格")]
         [Required(ErrorMessage = "请输入商品售价")]
-        [Range(0,10,ErrorMessage="商品售价必须介于0~99之间")]
+        [Range(0,99,ErrorMessage="商品售价必须介于0~99之间")]
         public double Price { get; set; }
 
         [DisplayName("上架时间")]

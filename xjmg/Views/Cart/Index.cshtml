@@ -51,7 +51,7 @@
             @Html.HiddenFor(modelItem=>Model[i].Product.Id)
 
             <tr>
-                <td>@Html.DisplayFor(modrlItem=>Model[i].Product.Name</td>
+                <td>@Html.DisplayFor(modrlItem=>Model[i].Product.Name)</td>
                 <td>NT$ @(Model[i].Product.Price)</td>
                 <td>@Html.DropDownListFor(modelItem=>Model[i].Amount,ddlAmountList)</td>
                 <td>NT$ @(Model[i].Product.Price*Model[i].Amount)</td>

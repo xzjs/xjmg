@@ -19,5 +19,6 @@ namespace xjmg.Models
         [MaxLength(20, ErrorMessage = "商品类别不可超过20个字")]
         public string Name { get; set; }
 
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

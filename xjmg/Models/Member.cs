@@ -46,5 +46,7 @@ namespace xjmg.Models
         [Description("当AuthCode扥与Null则代表此会员已经通过Email有效性验证")]
         [MaxLength(36, ErrorMessage = "email地址长度无法超过250字")]
         public string AuthCode { get; set; }
+
+        public virtual ICollection<OrderHeader> Orders { get; set; }
     }
 }
